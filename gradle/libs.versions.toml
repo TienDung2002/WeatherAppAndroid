@@ -53,7 +53,7 @@ swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefre
 # Glide
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 # BlurView
-blurview = { group = "com.github.Dimezis", name = "BlurView", version.ref = "blurview" }
+#blurview = { group = "com.github.Dimezis", name = "BlurView", version.ref = "blurview" }
 
 
 
