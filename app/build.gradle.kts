@@ -106,6 +106,10 @@ dependencies {
     // BlurView
     implementation ("com.github.Dimezis:BlurView:version-2.0.5")
 
+    // Other
+    implementation ("com.github.MatteoBattilana:WeatherView:3.0.0") // Hiệu ứng thời tiết
+
+
 }
 
 kapt{
