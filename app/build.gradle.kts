@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.parcelize")
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -103,4 +105,10 @@ dependencies {
 
     // BlurView
     implementation(libs.blurview)
+//    implementation ("com.github.Dimezis:BlurView:version-2.0.5")
+
+}
+
+kapt{
+    correctErrorTypes = true
 }
