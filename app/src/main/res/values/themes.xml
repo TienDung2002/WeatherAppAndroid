@@ -7,5 +7,6 @@
 
     <style name="Theme.WeatherAppAndroid" parent="Base.Theme.WeatherAppAndroid">
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>

@@ -3,6 +3,8 @@ package com.example.weatherappandroid.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -12,6 +14,7 @@ import com.example.weatherappandroid.R
 import com.example.weatherappandroid.ViewModel.WeatherViewModel
 import com.example.weatherappandroid.databinding.ActivityMainBinding
 import com.github.matteobattilana.weather.PrecipType
+import eightbitlab.com.blurview.RenderScriptBlur
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,15 +30,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.apply {
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            statusBarColor = Color.TRANSPARENT
-        }
 
         binding.apply {
             var lat = 51.50
             var lon = -0.12
             var name = "London"
+
+
+            // current temp
             cityTxt.text = name
             progressBar.visibility = View.VISIBLE
             weatherViewModel.loadCurrentWeather(lat, lon, "metric").enqueue(object :Callback<CurrentResponseApi>{
@@ -66,8 +68,33 @@ class MainActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<CurrentResponseApi>, t: Throwable) {
                     Toast.makeText(this@MainActivity, t.toString(), Toast.LENGTH_SHORT).show()
                 }
-
             })
+
+
+
+
+            // Setting blur view
+            var radius = 10f
+            val decorView = window.decorView
+            val rootView = (decorView.findViewById(android.R.id.content) as ViewGroup?)
+            val windowBackground = decorView.background
+
+            rootView?.let{
+                blurView.setupWith(it, RenderScriptBlur(this@MainActivity))
+                    .setFrameClearDrawable(windowBackground)
+                    .setBlurRadius(radius)
+                blurView.outlineProvider = ViewOutlineProvider.BACKGROUND
+                blurView.clipToOutline = true
+            }
+
+
+
+
+            // forecast temp
+
+
+
+
         }
     }
 

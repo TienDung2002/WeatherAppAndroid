@@ -9,4 +9,13 @@
     <string name="wind_speed">%1$d %2$s</string>
     <string name="humidity">%1$d %%</string>
     <string name="temperature">%1$d°</string>
+
+
+    <string name="sun">CN</string>
+    <string name="mon">Thứ 2</string>
+    <string name="tue">Thứ 3</string>
+    <string name="wed">Thứ 4</string>
+    <string name="thu">Thứ 5</string>
+    <string name="fri">Thứ 6</string>
+    <string name="sat">Thứ 7</string>
 </resources>
