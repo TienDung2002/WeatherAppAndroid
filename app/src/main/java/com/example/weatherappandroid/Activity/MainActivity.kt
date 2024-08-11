@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             var name = "London"
 
 
-            // current temp
+            // temp hiện tại
             cityTxt.text = name
             progressBar.visibility = View.VISIBLE
             weatherViewModel.loadCurrentWeather(lat, lon, "metric").enqueue(object :Callback<CurrentResponseApi>{
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-            // forecast temp
+            // dự báo temp
 
 
 

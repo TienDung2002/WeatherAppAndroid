@@ -17,10 +17,10 @@ import java.util.Calendar
 class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
     private lateinit var binding: ForecastViewholderBinding
 
-    //
+    // Định nghĩa ViewHolder => Quản lý các view con
     inner class ForecastViewHolder : RecyclerView.ViewHolder(binding.root)
 
-    //
+    // Tạo viewholder mới
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastAdapter.ForecastViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         binding = ForecastViewholderBinding.inflate(inflater, parent, false)
@@ -28,7 +28,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
     }
 
 
-    //
+    // Gán data vào viewholder
     override fun onBindViewHolder(holder: ForecastAdapter.ForecastViewHolder, position: Int) {
         val binding = ForecastViewholderBinding.bind(holder.itemView)
 
@@ -36,7 +36,8 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
         val calendar = Calendar.getInstance()
         calendar.time = date
 
-        val dayOfWeek = when (calendar.get(Calendar.DAY_OF_WEEK)) {
+        // Ngày
+        val daysOfWeek = when (calendar.get(Calendar.DAY_OF_WEEK)) {
             1 -> "Sun"
             2 -> "Mon"
             3 -> "Tue"
@@ -46,19 +47,28 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
             7 -> "Sat"
             else -> "-"
         }
-        binding.nameDayTxt.text = dayOfWeek
+//        val daysOfWeek = listOf(
+//            holder.itemView.context.getString(R.string.sun),
+//            holder.itemView.context.getString(R.string.mon),
+//            holder.itemView.context.getString(R.string.tue),
+//            holder.itemView.context.getString(R.string.wed),
+//            holder.itemView.context.getString(R.string.thu),
+//            holder.itemView.context.getString(R.string.fri),
+//            holder.itemView.context.getString(R.string.sat)
+//        )
+        binding.nameDayTxt.text = daysOfWeek
 
-
+        // Giờ
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val amPm = if (hour < 12) "AM" else "PM"
         val hour12 = calendar.get(Calendar.HOUR).toString()
         binding.hourTxt.text = hour12 + amPm
 
-
+        // temp
         val temp = Math.round(differ.currentList[position].main?.temp ?: 0.0).toInt()
         binding.tempTxt.text = holder.itemView.context.getString(R.string.temperature, temp)
 
-
+        // icon
         val icon = when (differ.currentList[position].weather?.get(0)?.icon.toString()) {
             "01d", "01n" -> "sunny"
             "02d", "02n" -> "cloudy_sunny"
@@ -75,7 +85,6 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
             icon,
             "drawable", binding.root.context.packageName
         )
-
         Glide.with(binding.root.context)
             .load(drawableResourceId)
             .into(binding.pic)
@@ -86,6 +95,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
     override fun getItemCount() = differ.currentList.size
 
 
+    // Tạo differ => so sánh và cập nhật dữ liệu mới
     private val differCallback = object : DiffUtil.ItemCallback<ForecastResponseApi.data>() {
         override fun areItemsTheSame(
             oldItem: ForecastResponseApi.data,
