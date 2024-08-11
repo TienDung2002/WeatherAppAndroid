@@ -11,7 +11,7 @@ class WeatherViewModel(val repository: WeatherRepository) : ViewModel() {
     // tự động tạo repository bằng gọi ApiClient
     constructor() : this(WeatherRepository(ApiClient().getClient().create(ApiServices::class.java)))
 
-    fun loadCurrentWeather(lat: Double, lon: Double, unit: String) {
+    fun loadCurrentWeather(lat: Double, lon: Double, unit: String) =
         repository.getCurWeather(lat, lon, unit)
-    }
+
 }

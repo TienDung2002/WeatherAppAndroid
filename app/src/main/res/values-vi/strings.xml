@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Weather Forecast</string>
-    <string name="wind">Wind</string>
-    <string name="humidity_xml">Humidity</string>
+    <string name="wind">Tốc độ gió</string>
+    <string name="humidity_xml">Độ ẩm</string>
     <string name="Km">Km</string>
     <string name="Degree">°</string>">
-
 
     <string name="wind_speed">%1$d %2$s</string>
     <string name="humidity">%1$d %%</string>
