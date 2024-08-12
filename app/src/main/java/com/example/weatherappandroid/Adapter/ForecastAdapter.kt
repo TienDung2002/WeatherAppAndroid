@@ -1,5 +1,6 @@
 package com.example.weatherappandroid.Adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import java.util.Calendar
 
 class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
     private lateinit var binding: ForecastViewholderBinding
+    private lateinit var context: Context
 
     // Định nghĩa ViewHolder => Quản lý các view con
     inner class ForecastViewHolder : RecyclerView.ViewHolder(binding.root)
@@ -31,6 +33,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
     // Gán data vào viewholder
     override fun onBindViewHolder(holder: ForecastAdapter.ForecastViewHolder, position: Int) {
         val binding = ForecastViewholderBinding.bind(holder.itemView)
+        context = binding.root.context
 
         val date = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(differ.currentList[position].dtTxt.toString())
         val calendar = Calendar.getInstance()
@@ -38,24 +41,16 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
 
         // Ngày
         val daysOfWeek = when (calendar.get(Calendar.DAY_OF_WEEK)) {
-            1 -> "Sun"
-            2 -> "Mon"
-            3 -> "Tue"
-            4 -> "Wed"
-            5 -> "Thu"
-            6 -> "Fri"
-            7 -> "Sat"
+            Calendar.SUNDAY -> context.getString(R.string.sun)
+            Calendar.MONDAY -> context.getString(R.string.mon)
+            Calendar.TUESDAY -> context.getString(R.string.tue)
+            Calendar.WEDNESDAY -> context.getString(R.string.wed)
+            Calendar.THURSDAY -> context.getString(R.string.thu)
+            Calendar.FRIDAY -> context.getString(R.string.fri)
+            Calendar.SATURDAY -> context.getString(R.string.sat)
             else -> "-"
         }
-//        val daysOfWeek = listOf(
-//            holder.itemView.context.getString(R.string.sun),
-//            holder.itemView.context.getString(R.string.mon),
-//            holder.itemView.context.getString(R.string.tue),
-//            holder.itemView.context.getString(R.string.wed),
-//            holder.itemView.context.getString(R.string.thu),
-//            holder.itemView.context.getString(R.string.fri),
-//            holder.itemView.context.getString(R.string.sat)
-//        )
+
         binding.nameDayTxt.text = daysOfWeek
 
         // Giờ

@@ -90,9 +90,7 @@ class MainActivity : AppCompatActivity() {
 
             rootView?.let{
                 blurView.setupWith(it, RenderScriptBlur(this@MainActivity))
-                    .setBlurEnabled(true)
                     .setFrameClearDrawable(windowBackground)
-                    .setBlurAutoUpdate(true)
                     .setBlurRadius(radius)
                 blurView.outlineProvider = ViewOutlineProvider.BACKGROUND
                 blurView.clipToOutline = true
