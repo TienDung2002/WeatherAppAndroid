@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#FFA900</color>
     <color name="yellow">#FBC500</color>
+    <color name="blurColor">#10ffffff</color>
+
 </resources>

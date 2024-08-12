@@ -60,7 +60,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
 
         // Giờ
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val amPm = if (hour < 12) "AM" else "PM"
+        val amPm = if (hour < 12) " AM" else " PM"
         val hour12 = calendar.get(Calendar.HOUR).toString()
         binding.hourTxt.text = hour12 + amPm
 

@@ -250,7 +250,7 @@
         android:layout_marginBottom="32dp"
         android:visibility="gone"
         android:background="@drawable/forecast_bg"
-        app:blurOverlayColor="#10ffffff"
+        app:blurOverlayColor="@color/blurColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

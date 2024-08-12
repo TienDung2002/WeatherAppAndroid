@@ -9,7 +9,10 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weatherappandroid.Adapter.ForecastAdapter
 import com.example.weatherappandroid.Model.CurrentResponseApi
+import com.example.weatherappandroid.Model.ForecastResponseApi
 import com.example.weatherappandroid.R
 import com.example.weatherappandroid.ViewModel.WeatherViewModel
 import com.example.weatherappandroid.databinding.ActivityMainBinding
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val weatherViewModel: WeatherViewModel by viewModels()
     private val calendar by lazy { Calendar.getInstance() }
+    private val forecastAdapter by lazy { ForecastAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +40,16 @@ class MainActivity : AppCompatActivity() {
             var lon = -0.12
             var name = "London"
 
-
             // temp hiện tại
             cityTxt.text = name
             progressBar.visibility = View.VISIBLE
-            weatherViewModel.loadCurrentWeather(lat, lon, "metric").enqueue(object :Callback<CurrentResponseApi>{
-                override fun onResponse(call: Call<CurrentResponseApi>, response: Response<CurrentResponseApi>) {
+            weatherViewModel.loadCurrentWeather(lat, lon, "metric")
+                // enqueue thực hiện yêu cầu bất đồng bộ, enqueue được cung cấp bởi retrofit2, tác dụng xử lí giống như coroutine
+                .enqueue(object :Callback<CurrentResponseApi>{
+                override fun onResponse(
+                    call: Call<CurrentResponseApi>,
+                    response: Response<CurrentResponseApi>
+                ) {
                     if (response.isSuccessful){
                         val data = response.body()
                         progressBar.visibility = View.GONE
@@ -74,14 +82,17 @@ class MainActivity : AppCompatActivity() {
 
 
             // Setting blur view
-            var radius = 10f
+            val radius = 20f
             val decorView = window.decorView
-            val rootView = (decorView.findViewById(android.R.id.content) as ViewGroup?)
+//            val rootView = (decorView.findViewById(android.R.id.content) as ViewGroup?)
+            val rootView = decorView.findViewById<ViewGroup>(android.R.id.content)
             val windowBackground = decorView.background
 
             rootView?.let{
                 blurView.setupWith(it, RenderScriptBlur(this@MainActivity))
+                    .setBlurEnabled(true)
                     .setFrameClearDrawable(windowBackground)
+                    .setBlurAutoUpdate(true)
                     .setBlurRadius(radius)
                 blurView.outlineProvider = ViewOutlineProvider.BACKGROUND
                 blurView.clipToOutline = true
@@ -89,13 +100,38 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
             // dự báo temp
+            weatherViewModel.loadForecastWeather(lat, lon, "metric")
+                .enqueue(object: Callback<ForecastResponseApi>{
+                    override fun onResponse(
+                        call: Call<ForecastResponseApi>,
+                        response: Response<ForecastResponseApi>
+                    ) {
+                        if (response.isSuccessful){
+                            val data = response.body()
+                            blurView.visibility = View.VISIBLE
+                            data?.let {
+                                forecastAdapter.differ.submitList(it.list)
+                                forecastView.apply{
+                                    layoutManager = LinearLayoutManager(
+                                        this@MainActivity,
+                                        LinearLayoutManager.HORIZONTAL,
+                                        false)
+                                    adapter = forecastAdapter
+                                }
+                            }
+                        }
+                    }
 
-
+                    override fun onFailure(call: Call<ForecastResponseApi>, t: Throwable) {
+                        Toast.makeText(this@MainActivity, t.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                })
 
 
         }
+
+
     }
 
 
