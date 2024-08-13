@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />-->
 
     <application
         android:allowBackup="true"
@@ -17,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherAppAndroid"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.CityListActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.MainActivity"
             android:exported="true">
