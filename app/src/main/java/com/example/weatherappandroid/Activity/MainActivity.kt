@@ -1,7 +1,9 @@
 package com.example.weatherappandroid.Activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
@@ -36,9 +38,27 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.apply {
-            var lat = 51.50
-            var lon = -0.12
-            var name = "London"
+            var lat = intent.getDoubleExtra("lat", 0.0)
+            var lon = intent.getDoubleExtra("lon", 0.0)
+            var name = intent.getStringExtra("name")
+
+            Log.d("lat", lat.toString())
+            Log.d("lon", lon.toString())
+            Log.d("name", name.toString())
+
+
+            if (lat == 0.0) {
+//                lat = 51.50
+//                lon = -0.12
+//                name = "London"
+                lat = 21.02
+                lon = 105.85
+                name = "Hanoi"
+            }
+
+            addCity.setOnClickListener {
+                startActivity(Intent(this@MainActivity, CityListActivity::class.java))
+            }
 
             // temp hiện tại
             cityTxt.text = name
@@ -62,6 +82,10 @@ class MainActivity : AppCompatActivity() {
                             maxTempTxt.text = getString(R.string.temperature, Math.round(it.main?.tempMax ?: 0.0))
                             minTempTxt.text = getString(R.string.temperature, Math.round(it.main?.tempMin ?: 0.0))
 
+                            // Check the icon value in log
+                            val icon = it.weather?.get(0)?.icon ?: "-"
+                            Log.d("WeatherIcon", "Icon: $icon")
+
                             val drawableId = if (isNight()) R.drawable.night_background
                             else {
                                 setDinamicWallpaper(it.weather?.get(0)?.icon?: "-")
@@ -82,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
 
             // Setting blur view
-            val radius = 20f
+            val radius = 10f
             val decorView = window.decorView
 //            val rootView = (decorView.findViewById(android.R.id.content) as ViewGroup?)
             val rootView = decorView.findViewById<ViewGroup>(android.R.id.content)
@@ -139,11 +163,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDinamicWallpaper(icon: String) :Int{
         return when(icon.dropLast(1)){
-            "01" -> {
+            "01", "02" -> {
                 initWeatherView(PrecipType.CLEAR)
-                R.drawable.snow_bg
+                R.drawable.cloudy_sunny
             }
-            "02", "03", "04" -> {
+            "03", "04" -> {
                 initWeatherView(PrecipType.CLEAR)
                 R.drawable.cloudy_bg
             }
@@ -165,21 +189,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setEffectRainSnow(icon: String){
         when(icon.dropLast(1)){
-            "01" -> {
-                initWeatherView(PrecipType.CLEAR)
-            }
-            "02", "03", "04" -> {
-                initWeatherView(PrecipType.CLEAR)
-            }
-            "09", "10", "11" -> {
-                initWeatherView(PrecipType.RAIN)
-            }
-            "13" -> {
-                initWeatherView(PrecipType.SNOW)
-            }
-            "50" -> {
-                initWeatherView(PrecipType.CLEAR)
-            }
+            "01", "02" -> initWeatherView(PrecipType.CLEAR)
+            "03", "04" -> initWeatherView(PrecipType.CLEAR)
+            "09", "10", "11" -> initWeatherView(PrecipType.RAIN)
+            "13" -> initWeatherView(PrecipType.SNOW)
+            "50" -> initWeatherView(PrecipType.CLEAR)
         }
     }
 

@@ -22,6 +22,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
     // Định nghĩa ViewHolder => Quản lý các view con
     inner class ForecastViewHolder : RecyclerView.ViewHolder(binding.root)
 
+
     // Tạo viewholder mới
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastAdapter.ForecastViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -30,7 +31,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
     }
 
 
-    // Gán data vào viewholder
+    // // Gán data vào từng item
     override fun onBindViewHolder(holder: ForecastAdapter.ForecastViewHolder, position: Int) {
         val binding = ForecastViewholderBinding.bind(holder.itemView)
         context = binding.root.context

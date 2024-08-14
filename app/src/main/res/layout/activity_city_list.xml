@@ -1,45 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.CityListActivity"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="15dp">
 
-    <Button
+    <ImageButton
         android:id="@+id/backButton"
-        android:layout_width="40dp"
-        android:layout_height="34dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/transparent_bg"
-        android:drawableStart="@drawable/ic_back24px"
-        android:layout_marginBottom="16dp"/>
+        android:padding="10dp"
+        android:src="@drawable/baseline_arrow_back_ios_24"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp"/>
 
-<!--    <EditText-->
-<!--        android:id="@+id/editTextText"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:ems="10"-->
-<!--        android:textSize="12sp"-->
-<!--        android:inputType="text"-->
-<!--        android:text="Name" />-->
-
-
-    <SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/black_rounded_search"
-        android:closeIcon="@drawable/ic_search_close20px"
-        android:iconifiedByDefault="false"
-        android:queryBackground="@drawable/transparent_bg"
-        android:searchIcon="@drawable/ic_search_search24px"
-        android:queryHint="@string/search_hint"/>
-
-    <androidx.recyclerview.widget.RecyclerView
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        />
-</LinearLayout>
+        android:layout_below="@id/backButton">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/cityEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:textSize="16sp"
+                    android:inputType="text"
+                    android:hint="@string/search_hint"
+                    android:background="@drawable/black_rounded_search"
+                    android:padding="15dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cityView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/cityProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</RelativeLayout>
