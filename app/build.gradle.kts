@@ -112,6 +112,8 @@ dependencies {
 
     // Other
     implementation ("com.github.MatteoBattilana:WeatherView:3.0.0") // Hiệu ứng thời tiết
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
+
 
 
 }
