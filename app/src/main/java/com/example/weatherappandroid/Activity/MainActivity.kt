@@ -16,6 +16,7 @@ import com.example.weatherappandroid.Adapter.ForecastAdapter
 import com.example.weatherappandroid.Model.CurrentResponseApi
 import com.example.weatherappandroid.Model.ForecastResponseApi
 import com.example.weatherappandroid.R
+import com.example.weatherappandroid.Uitls.PreventDoubleClick
 import com.example.weatherappandroid.ViewModel.WeatherViewModel
 import com.example.weatherappandroid.databinding.ActivityMainBinding
 import com.github.matteobattilana.weather.PrecipType
@@ -57,8 +58,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             addCity.setOnClickListener {
-                startActivity(Intent(this@MainActivity, CityListActivity::class.java))
+                if (PreventDoubleClick.checkClick()) {
+                    startActivity(Intent(this@MainActivity, CityListActivity::class.java))
+                }
             }
+
 
             // temp hiện tại
             cityTxt.text = name
