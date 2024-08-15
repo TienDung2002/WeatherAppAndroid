@@ -1,5 +1,6 @@
 package com.example.weatherappandroid.Adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -40,11 +41,18 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
         binding.cityTxt.text = differ.currentList[position].name
 
         binding.root.setOnClickListener{
-            val intent = Intent(binding.root.context, MainActivity::class.java)
-            intent.putExtra("lat", differ.currentList[position].lat)
-            intent.putExtra("lon", differ.currentList[position].lon)
-            intent.putExtra("name", differ.currentList[position].name)
-            binding.root.context.startActivity(intent)
+//            val intent = Intent(binding.root.context, MainActivity::class.java)
+//            intent.putExtra("lat", differ.currentList[position].lat)
+//            intent.putExtra("lon", differ.currentList[position].lon)
+//            intent.putExtra("name", differ.currentList[position].name)
+//            binding.root.context.startActivity(intent)
+
+            val resultIntent = Intent()
+            resultIntent.putExtra("lat", differ.currentList[position].lat)
+            resultIntent.putExtra("lon", differ.currentList[position].lon)
+            resultIntent.putExtra("name", differ.currentList[position].name)
+            (binding.root.context as Activity).setResult(Activity.RESULT_OK, resultIntent)
+            (binding.root.context as Activity).finish()
         }
     }
 
