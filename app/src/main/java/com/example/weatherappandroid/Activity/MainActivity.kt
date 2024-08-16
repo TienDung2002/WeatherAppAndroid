@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            checkLocationPermission()
+//            checkLocationPermission()
 
             if (useCurrentLocation) {
                 checkLocationPermission()
@@ -86,6 +86,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            // swipe refresh
+            swipeRefreshLayout.setOnRefreshListener {
+                checkLocationPermission()
+                if (useCurrentLocation) {
+                    getCurrentLocation()
+                } else {
+                    useDefaultLocation()
+                }
+                swipeRefreshLayout.isRefreshing = false
+            }
 
             // Setting blur view
             val radius = 10f
