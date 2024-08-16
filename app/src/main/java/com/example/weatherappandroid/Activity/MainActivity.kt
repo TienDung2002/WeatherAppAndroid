@@ -242,6 +242,7 @@ class MainActivity : AppCompatActivity() {
 
         // Nếu tất cả cài đặt vị trí trên cả thiết bị và app đều được bật
         task.addOnSuccessListener { response ->
+            Log.d("checkLocationSettings", "All settings are on")
             getCurrentLocation()
         }
 
@@ -267,8 +268,10 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == LOCATION_APP_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkLocationSettings() // Nếu quyền được cấp, kiểm tra cài đặt vị trí của thiết bị
+                Log.d("RequestPermissionsResult", "Request Permissions Accepted")
             } else {
                 // Quyền bị từ chối, sử dụng giá trị mặc định
+                Log.d("RequestPermissionsResult", "Request Permissions Denied")
                 useCurrentLocation = false
                 useDefaultLocation()
             }
