@@ -4,5 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="edittext_bg">#DCDCDC</color>
     <color name="blurColor">#10ffffff</color>
+    <color name="orange">#8FBF8D</color>
+    <color name="city_text_bg">#FFE7E7</color>
+
 
 </resources>

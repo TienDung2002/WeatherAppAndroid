@@ -36,7 +36,7 @@ class CityListActivity : AppCompatActivity() {
             // nút back
             backButton.setOnClickListener {
                 val resultIntent = Intent()
-                setResult(Activity.RESULT_OK, resultIntent)
+                setResult(Activity.RESULT_CANCELED, resultIntent)
                 finish()
             }
 
@@ -63,7 +63,7 @@ class CityListActivity : AppCompatActivity() {
                                         cityView.apply {
                                             layoutManager = LinearLayoutManager(
                                                 this@CityListActivity,
-                                                LinearLayoutManager.HORIZONTAL,
+                                                LinearLayoutManager.VERTICAL,
                                                 false
                                             )
                                             adapter = cityAdapter
