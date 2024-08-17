@@ -29,10 +29,14 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.os.Handler
+import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.tasks.OnSuccessListener
@@ -47,17 +51,26 @@ class MainActivity : AppCompatActivity() {
     private val forecastAdapter by lazy { ForecastAdapter() }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+
     private val LOCATION_APP_REQUEST_CODE = 1000
     private val LOCATION_DEVICE_REQUEST_CODE = 2000
+    private val REQUEST_CODE_CITY = 1
     private var useCurrentLocation = true
 
-    private val REQUEST_CODE_CITY = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Khởi tạo LocationRequest
+        locationRequest = LocationRequest.create().apply {
+            interval = 10000 // Time nhận dc update vị trí
+            fastestInterval = 5000 // Time ngắn nhất giữa các lần update
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
 
 
         binding.apply {
@@ -181,18 +194,18 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun getCurrentLocation() {
+        Log.d("getCurrentLocation_called", "getCurrentLocation_called")
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener(this, OnSuccessListener { location ->
-                    if (location != null) {
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    locationResult.lastLocation?.let { location ->
                         val lat = location.latitude
                         val lon = location.longitude
-                        Log.d("CurLocation", "Lat: $lat, Lon: $lon")
 
                         try {
-                            val geocoder = Geocoder(this, Locale.getDefault())
+                            val geocoder = Geocoder(this@MainActivity, Locale.getDefault())
                             val addresses: List<Address>? = geocoder.getFromLocation(lat, lon, 1)
 
                             if (addresses != null && addresses.isNotEmpty()) {
@@ -201,17 +214,24 @@ class MainActivity : AppCompatActivity() {
                                     ?: address.subAdminArea
                                     ?: address.adminArea
                                     ?: "Unknown City"
+                                Log.d("CurLocation", "Lat: $lat, Lon: $lon, Name: $cityName")
 
                                 updateUI(lat, lon, cityName)
                             } else {
-                                Toast.makeText(this, "No city found for the location", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@MainActivity, "No city found for the location", Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: IOException) {
                             e.printStackTrace()
-                            Toast.makeText(this, "Geocoder service not available", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "Geocoder service not available", Toast.LENGTH_SHORT).show()
                         }
+
+                        // Ngừng cập nhật vị trí sau khi lấy được vị trí
+                        fusedLocationClient.removeLocationUpdates(this)
                     }
-                })
+                }
+            }
+
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
         } else {
             // quyền không được cấp
             Log.d("CurLocation", "Location is null")
@@ -219,21 +239,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_APP_REQUEST_CODE)
         } else {
-//            getCurrentLocation()
             checkLocationSettings()
         }
     }
 
 
     private fun checkLocationSettings() {
-        val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)
 
@@ -370,6 +385,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }
