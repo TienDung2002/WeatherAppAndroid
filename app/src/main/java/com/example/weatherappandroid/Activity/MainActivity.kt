@@ -25,6 +25,9 @@ import retrofit2.Response
 import java.util.Calendar
 import android.Manifest
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Address
@@ -32,6 +35,7 @@ import android.location.Geocoder
 import android.os.Handler
 import android.os.Looper
 import androidx.core.app.ActivityCompat
+import com.example.weatherappandroid.Services.NotifyBroadcastReiceiver
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -52,12 +56,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
-
-    private val LOCATION_APP_REQUEST_CODE = 1000
-    private val LOCATION_DEVICE_REQUEST_CODE = 2000
-    private val REQUEST_CODE_CITY = 1
     private var useCurrentLocation = true
 
+    companion object {
+        const val LOCATION_APP_REQUEST_CODE = 1000
+        const val LOCATION_DEVICE_REQUEST_CODE = 2000
+        const val REQUEST_CODE_CITY = 1
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +77,7 @@ class MainActivity : AppCompatActivity() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
+        scheduleDailyNotification()
 
         binding.apply {
             var lat = intent.getDoubleExtra("lat", 0.0)
@@ -89,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-//            checkLocationPermission()
+            scheduleDailyNotification()
 
             if (useCurrentLocation) {
                 checkLocationPermission()
@@ -124,19 +130,45 @@ class MainActivity : AppCompatActivity() {
                 blurView.clipToOutline = true
             }
 
-
-
-
-
         }
 
+    }
 
+
+    private fun scheduleDailyNotification() {
+        Log.d("scheduleDaily", "Notification scheduled_1")
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, NotifyBroadcastReiceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 6) // Tgian gửi noti hàng ngày lúc 6h sáng
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+        Log.d("scheduleDaily", "Notification scheduled")
     }
 
 
     private fun isNight(): Boolean {
         return calendar.get(Calendar.HOUR_OF_DAY) >= 18
     }
+
 
     private fun setDinamicWallpaper(icon: String) :Int{
         return when(icon.dropLast(1)){
@@ -238,6 +270,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
