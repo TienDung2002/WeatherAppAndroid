@@ -19,6 +19,6 @@
     <string name="fri">Fri</string>
     <string name="sat">Sat</string>
 
-    <string name="search_hint">Search your city</string>
+    <string name="search_hint">Search city</string>
 
 </resources>

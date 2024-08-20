@@ -18,4 +18,8 @@
     <string name="thu">Thứ 5</string>
     <string name="fri">Thứ 6</string>
     <string name="sat">Thứ 7</string>
+
+
+    <string name="search_hint">Tìm thành phố</string>
+
 </resources>
