@@ -95,8 +95,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            scheduleDailyNotification()
-
             if (useCurrentLocation) {
                 checkLocationPermission()
             } else {
@@ -151,6 +149,7 @@ class MainActivity : AppCompatActivity() {
             set(Calendar.SECOND, 0)
         }
 
+        // Nếu thời gian đã qua thì đặt cho ngày hôm sau
         if (calendar.timeInMillis < System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }

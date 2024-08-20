@@ -7,12 +7,12 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.example.weatherappandroid.Model.CurrentResponseApi
@@ -40,7 +40,7 @@ class DailyNotificationsService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         getCurrentLocationOrDefault()
         Log.d("Service_started", "Service started")
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     // gọi đến khi thành phần khác gọi service bằng câu lệnh bindService()
@@ -48,10 +48,10 @@ class DailyNotificationsService : Service() {
 
 
     // Gọi khi service bị hủy
-    override fun onDestroy() {
-        Log.d("Service_destroyed", "Service destroyed")
-        super.onDestroy()
-    }
+//    override fun onDestroy() {
+//        Log.d("Service_destroyed", "Service destroyed")
+//        super.onDestroy()
+//    }
 
 
     private fun useDefaultLocation() {
@@ -71,10 +71,9 @@ class DailyNotificationsService : Service() {
                         val humidity = it.main?.humidity ?: 0
                         val tempMax = Math.round(it.main?.tempMax ?: 0.0)
                         val tempMin = Math.round(it.main?.tempMin ?: 0.0)
-                        val weatherDescription = it.weather?.get(0)?.description ?: "-"
 
-                        val notificationContent = "$weatherDescription, nhiệt độ cao nhất ${tempMax}°C, thấp nhất ${tempMin}°C, độ ẩm $humidity%"
-                        showNotification(cityName, notificationContent)
+                        val notificationContent = getString(R.string.notification_content, tempMax, tempMin, humidity)
+                        showNotification(cityName, temp, notificationContent)
                     }
                 }
             }
@@ -86,9 +85,10 @@ class DailyNotificationsService : Service() {
     }
 
 
-    private fun showNotification(cityName: String, weatherInfo: String) {
+    private fun showNotification(cityName: String, curTemp: Long, weatherInfo: String) {
         Log.d("NotiSerCalled", "showNotification called")
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val bitmapLargeIcon = BitmapFactory.decodeResource(resources, R.drawable.weather_largeimg)
         val channelId = "daily_notification_channel"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -101,8 +101,9 @@ class DailyNotificationsService : Service() {
         }
 
         val notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(cityName)       // Tên thành phố here
-            .setContentText(weatherInfo)     // Thông tin thời tiết
+            .setContentTitle("$curTemp°C $cityName" )       // Nhiệt độ + tên thành phố
+            .setContentText(weatherInfo)                    // Thông tin chi tiết
+            .setLargeIcon(bitmapLargeIcon)
             .setSmallIcon(R.drawable.app_icon)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()

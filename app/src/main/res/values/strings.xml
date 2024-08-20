@@ -9,6 +9,7 @@
     <string name="wind_speed">%1$d %2$s</string>
     <string name="humidity">%1$d %%</string>
     <string name="temperature">%1$d°</string>
+    <string name="notification_content">Highest %1$d°C | Lowest %2$d°C | Humidity %3$d%%</string>
 
 
     <string name="sun">Sun</string>

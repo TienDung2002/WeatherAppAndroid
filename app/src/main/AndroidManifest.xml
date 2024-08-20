@@ -11,6 +11,7 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 
     <application
@@ -36,8 +37,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Services.DailyNotificationsService"/>
+
+        <service android:name=".Services.DailyNotificationsService"
+            android:exported="true" />
+
         <receiver android:name=".Services.NotifyBroadcastReiceiver"/>
+
+        <receiver
+            android:name=".Services.BootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

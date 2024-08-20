@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Weather Forecast</string>
+    <string name="app_name">Dự báo thời tiết</string>
     <string name="wind">Tốc độ gió</string>
     <string name="humidity_xml">Độ ẩm</string>
     <string name="Km">Km</string>
@@ -9,6 +9,7 @@
     <string name="wind_speed">%1$d %2$s</string>
     <string name="humidity">%1$d %%</string>
     <string name="temperature">%1$d°</string>
+    <string name="notification_content">Cao nhất %1$d°C | Thấp nhất %2$d°C | Độ ẩm %3$d%%</string>
 
 
     <string name="sun">CN</string>
