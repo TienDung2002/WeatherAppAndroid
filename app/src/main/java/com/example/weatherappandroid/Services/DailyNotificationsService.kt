@@ -47,7 +47,7 @@ class DailyNotificationsService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
 
-    // Gọi khi service bị hủy
+    // Gọi sau khi service bị hủy
 //    override fun onDestroy() {
 //        Log.d("Service_destroyed", "Service destroyed")
 //        super.onDestroy()
@@ -73,7 +73,7 @@ class DailyNotificationsService : Service() {
                         val tempMin = Math.round(it.main?.tempMin ?: 0.0)
 
                         val notificationContent = getString(R.string.notification_content, tempMax, tempMin, humidity)
-                        showNotification(cityName, temp, notificationContent)
+                        showWeatherNotification(cityName, temp, notificationContent)
                     }
                 }
             }
@@ -85,11 +85,11 @@ class DailyNotificationsService : Service() {
     }
 
 
-    private fun showNotification(cityName: String, curTemp: Long, weatherInfo: String) {
+    private fun showWeatherNotification(cityName: String, curTemp: Long, weatherInfo: String) {
         Log.d("NotiSerCalled", "showNotification called")
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val bitmapLargeIcon = BitmapFactory.decodeResource(resources, R.drawable.weather_largeimg)
-        val channelId = "daily_notification_channel"
+        val channelId = "dailyWeather_notification_channel"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -108,7 +108,9 @@ class DailyNotificationsService : Service() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
 
-        notificationManager.notify(1, notification)
+        notificationManager.notify(1, notification) // noti riêng lẻ
+        //startForeground(2, notification) // nếu muốn service này chạy liên tục trong chế độ foreground, nhằm đảm bảo service k bị auto kill khi app ở trạng thái nền
+
     }
 
 

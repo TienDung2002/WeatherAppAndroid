@@ -39,7 +39,8 @@
         </activity>
 
         <service android:name=".Services.DailyNotificationsService"
-            android:exported="true" />
+            android:exported="true"
+            android:foregroundServiceType="location"/>
 
         <receiver android:name=".Services.NotifyBroadcastReiceiver"/>
 
